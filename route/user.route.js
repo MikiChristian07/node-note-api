@@ -1,9 +1,11 @@
 import express from 'express';
+import validateUserSchema from '../validators/user.validator.js';
+import validator from '../validators/validator.js';
 import UserController from '../controllers/user.controller.js';
 
 const userRouter = express.Router();
 
-userRouter.post('/', UserController.create);
+userRouter.post('/', [validator(validateUserSchema)], UserController.create);
 userRouter.post('/login', UserController.login);
 
 export default userRouter;

@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { User } from '../models/user.model.js';
+import User from '../models/user.model.js';
 
 class UserService {
     async create(data) {
