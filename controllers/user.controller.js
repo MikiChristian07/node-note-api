@@ -26,6 +26,14 @@ class UserController {
         });
     }
 
+    async find(req, res) {
+        const data = await UserService.fetch();
+        return res.status(201).send({
+            status: true,
+            body: data
+        });
+    }
+
     async login(req, res) {
         const { email } = req.body;
         const { password } = req.body;

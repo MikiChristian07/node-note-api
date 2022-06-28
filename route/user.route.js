@@ -5,6 +5,7 @@ import UserController from '../controllers/user.controller.js';
 
 const userRouter = express.Router();
 
+userRouter.get('/', UserController.find);
 userRouter.post('/', [validator(validateUserSchema)], UserController.create);
 userRouter.post('/login', UserController.login);
 

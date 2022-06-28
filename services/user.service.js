@@ -11,6 +11,11 @@ class UserService {
         const users = await User.findOne({ email });
         return users;
     }
+
+    async fetch() {
+        const users = await User.find({});
+        return users;
+    }
 }
 
 export default new UserService();
