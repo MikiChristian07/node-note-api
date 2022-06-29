@@ -1,11 +1,10 @@
 /* eslint-disable class-methods-use-this */
 import _ from 'lodash';
+import bcrypt from 'bcrypt';
 import UserService from '../services/user.service.js';
 
 class UserController {
     async create(req, res) {
-        // take in the email and password from the body
-        const data = { email: req.body.email, password: req.body.password };
         // find the email of the user
         const user = await UserService.findByEmail(req.body.email);
 
@@ -16,14 +15,23 @@ class UserController {
             });
         }
 
+        // First hash the password
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        // take in the email and password from the body
+        const data = { email: req.body.email, password: hashedPassword };
         const newUser = await UserService.create(data);
 
-        const token = 'tokens';
-        return res.status(201).send({
-            success: true,
-            message: 'user has been created',
-            body: newUser
-        });
+        newUser.save()
+            .then(() => {
+                res.status(200).send({
+                    success: true,
+                    message: 'user has been created',
+                    body: newUser
+                });
+            })
+            .catch((e) => {
+                res.status(404).send(e);
+            });
     }
 
     async find(req, res) {
@@ -43,18 +51,17 @@ class UserController {
         if (_.isEmpty(user)) {
             return res.send({
                 success: false,
-                message: 'Invalid email or password'
+                message: 'Cannot find the user'
             });
         }
 
-        if (user.password !== password) {
+        const verifyPassword = await bcrypt.compare(password, user.password);
+        if (!verifyPassword) {
             return res.status(400).send({
-                success: true,
-                message: 'success',
-                data: token
+                success: false,
+                message: 'Invalid Email or password'
             });
         }
-
         return res.status(201).send({
             success: true,
             message: 'User has been logged in'
