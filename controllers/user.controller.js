@@ -1,7 +1,12 @@
+/* eslint-disable import/extensions */
 /* eslint-disable class-methods-use-this */
 import _ from 'lodash';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserService from '../services/user.service.js';
+
+dotenv.config();
 
 class UserController {
     async create(req, res) {
@@ -21,24 +26,18 @@ class UserController {
         const data = { email: req.body.email, password: hashedPassword };
         const newUser = await UserService.create(data);
 
-        newUser.save()
-            .then(() => {
-                res.status(200).send({
-                    success: true,
-                    message: 'user has been created',
-                    body: newUser
-                });
-            })
-            .catch((e) => {
-                res.status(404).send(e);
-            });
+        return res.status(200).send({
+            success: true,
+            message: 'user has been created',
+            body: { newUser }
+        });
     }
 
     async find(req, res) {
-        const data = await UserService.fetch();
+        const user = await UserService.fetch();
         return res.status(201).send({
             status: true,
-            body: data
+            data: user
         });
     }
 
@@ -62,9 +61,13 @@ class UserController {
                 message: 'Invalid Email or password'
             });
         }
-        return res.status(201).send({
+
+        const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+
+        return res.header('accessToken', accessToken).status(201).send({
             success: true,
-            message: 'User has been logged in'
+            message: 'User has been logged in',
+            accessToken
         });
     }
 }

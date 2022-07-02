@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* eslint-disable class-methods-use-this */
 import { Note } from '../models/note.model.js';
 
@@ -15,6 +16,11 @@ class NoteService {
 
     async fetch() {
         const notes = await Note.find({});
+        return notes;
+    }
+
+    async findUserNotes(filter = {}) {
+        const notes = await Note.find(filter).populate('user');
         return notes;
     }
 
