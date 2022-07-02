@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import express from 'express';
 import NoteController from '../controllers/note.controller.js';
 import authenticateToken from '../middlewares/auth.middleware.js';

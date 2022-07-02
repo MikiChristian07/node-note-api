@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import express from 'express';
 import validateUserSchema from '../validators/user.validator.js';
 import validator from '../validators/validator.js';

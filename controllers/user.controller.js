@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserService from '../services/user.service.js';
+import generateAccessToken from '../middlewares/auth.middleware.js';
 
 dotenv.config();
 
@@ -29,7 +30,7 @@ class UserController {
         return res.status(200).send({
             success: true,
             message: 'user has been created',
-            body: { newUser }
+            body: { ...newUser.toJsON() }
         });
     }
 
@@ -62,12 +63,14 @@ class UserController {
             });
         }
 
-        const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET);
+        const accessToken = generateAccessToken(user.toJSON());
+        const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
 
         return res.header('accessToken', accessToken).status(201).send({
             success: true,
             message: 'User has been logged in',
-            accessToken
+            accessToken,
+            refreshToken
         });
     }
 }
