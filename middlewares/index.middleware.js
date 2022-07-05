@@ -1,8 +1,10 @@
+/* eslint-disable import/extensions */
+/* eslint-disable import/no-cycle */
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import routes from '../route/index.route.js';
-import dbConn from '../config/db.config.js'; 
+import dbConn from '../config/db.config.js';
 import error from './error.middleware.js';
 
 /**
