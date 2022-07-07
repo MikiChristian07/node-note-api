@@ -1,14 +1,14 @@
 /* eslint-disable import/extensions */
 import express from 'express';
 import NoteController from '../controllers/note.controller.js';
-import authenticateToken from '../middlewares/auth.middleware.js';
+import auth from '../middlewares/auth.middleware.js';
 
 const noteRouter = express.Router();
 
-noteRouter.post('/', authenticateToken, NoteController.create);
-noteRouter.get('/', authenticateToken, NoteController.findUserNotes);
-noteRouter.get('/:id', authenticateToken, NoteController.findbyid);
-noteRouter.delete('/:id', authenticateToken, NoteController.delete);
-noteRouter.put('/:id', authenticateToken, NoteController.update);
+noteRouter.post('/', auth.authenticateToken, NoteController.create);
+noteRouter.get('/', auth.authenticateToken, NoteController.findUserNotes);
+noteRouter.get('/:id', auth.authenticateToken, NoteController.findbyid);
+noteRouter.delete('/:id', auth.authenticateToken, NoteController.delete);
+noteRouter.put('/:id', auth.authenticateToken, NoteController.update);
 
 export default noteRouter;

@@ -13,10 +13,9 @@ class NoteController {
 
     async find(req, res) {
         const notes = await NoteService.fetch();
-        const userPosts = notes.filter((post) => post.email === req.user.User);
         return res.status(201).send({
             success: true,
-            body: userPosts
+            body: notes
         });
     }
 

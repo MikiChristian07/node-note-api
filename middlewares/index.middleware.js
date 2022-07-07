@@ -13,6 +13,7 @@ import error from './error.middleware.js';
  */
 const middleware = (app) => {
     dbConn();
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
     app.use(morgan('dev'));
     app.use(cors());

@@ -13,6 +13,12 @@ class TokenService {
         const Tokens = await Token.find({});
         return Tokens;
     }
+
+    async findByRefreshToken(token) {
+        const refreshToken = await Token.findOne({ token });
+
+        return refreshToken;
+    }
 }
 
 export default new TokenService();

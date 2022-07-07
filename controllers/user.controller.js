@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import UserService from '../services/user.service.js';
-import generateAccessToken from '../middlewares/auth.middleware.js';
+import Auth from '../middlewares/auth.middleware.js';
+import TokenService from '../services/token.service.js';
 
 dotenv.config();
 
@@ -45,7 +46,7 @@ class UserController {
     async login(req, res) {
         const { email } = req.body;
         const { password } = req.body;
-
+console.log('HHHHHHHHHHHHHHHH')
         const user = await UserService.findByEmail(email);
 
         if (_.isEmpty(user)) {
@@ -63,8 +64,17 @@ class UserController {
             });
         }
 
-        const accessToken = generateAccessToken(user.toJSON());
-        const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET);
+        const accessToken = Auth.generateAccessToken(user);
+        const refreshToken = jwt.sign(
+            { _id: user._id, email: user.email },
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        // Try to find and upsert if not exist
+        await TokenService.create({
+            user: user._id,
+            token: refreshToken
+        });
 
         return res.header('accessToken', accessToken).status(201).send({
             success: true,
