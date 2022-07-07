@@ -46,7 +46,7 @@ class UserController {
     async login(req, res) {
         const { email } = req.body;
         const { password } = req.body;
-console.log('HHHHHHHHHHHHHHHH')
+
         const user = await UserService.findByEmail(email);
 
         if (_.isEmpty(user)) {
